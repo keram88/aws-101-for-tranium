@@ -118,24 +118,6 @@ For security best practices, you should use an IAM user instead of your root acc
 
 ---
 
-<!-- ## 2. Configuring Budget Alerts
-
-### Using the Console
-
-1. Go to the [AWS Billing Dashboard](https://console.aws.amazon.com/billing/)
-2. In the left navigation pane, click "Budgets"
-3. Click "Create budget"
-4. Select "Cost budget" and click "Next"
-5. Configure your budget:
-   - Name: "TrainiumWorkshopBudget"
-   - Period: Monthly
-   - Budget amount: Set to $1,500 (or your desired amount)
-6. Set up alerts at 25%, 50%, 75%, and 90% thresholds
-7. Add your email address as a notification recipient
-8. Review and click "Create budget"
-
---- -->
-
 ## 2. Installing and Configuring AWS Command Line Interface (CLI)
 
 The AWS Command Line Interface (CLI) allows you to interact with AWS services from the terminal. This section covers installation and setup for different operating systems.
@@ -249,55 +231,6 @@ cp ~/.aws/credentials ~/.aws/credentials.backup
 Copy-Item -Path "$env:USERPROFILE\.aws\credentials" -Destination "$env:USERPROFILE\.aws\credentials.backup"
 ```
 
-<!-- ### Using the AWS CLI for Budget Alerts
-
-Now that you have the AWS CLI installed, you can also create budget alerts and check your credit balance using the command line:
-
-To create a budget alert, first create the required JSON files:
-
-Create `budget.json`:
-```json
-{
-    "BudgetName": "TrainiumWorkshopBudget",
-    "BudgetLimit": {
-        "Amount": "1500",
-        "Unit": "USD"
-    },
-    "BudgetType": "COST",
-    "TimeUnit": "MONTHLY"
-}
-```
-
-Create `notifications.json`:
-```json
-[
-    {
-        "Notification": {
-            "NotificationType": "ACTUAL",
-            "ComparisonOperator": "GREATER_THAN",
-            "Threshold": 50.0,
-            "ThresholdType": "PERCENTAGE",
-            "NotificationState": "ALARM"
-        },
-        "Subscribers": [
-            {
-                "SubscriptionType": "EMAIL",
-                "Address": "your-email@example.com"
-            }
-        ]
-    }
-]
-```
-
-Then run the create-budget command:
-
-```bash
-aws budgets create-budget \
-    --account-id $(aws sts get-caller-identity --query 'Account' --output text) \
-    --budget file://budget.json \
-    --notifications-with-subscribers file://notifications.json
-``` -->
-
 ### Checking AWS Cost and Usage
 
 To check your AWS current month spending using the CLI:
@@ -356,3 +289,48 @@ To check your remaining AWS credit balance (how many credits you have left):
 ---
 
 ## 3. Launching a Trainium Instance
+
+
+## 4. Instance Management
+
+```bash
+# List available Trainium instance types
+aws ec2 describe-instance-type-offerings \
+    --filters Name=instance-type,Values=trn1*,trn2* \
+    --output table
+
+# Find latest Neuron DLAMI
+aws ec2 describe-images \
+    --owners amazon \
+    --filters "Name=name,Values=*Neuron*Ubuntu*22.04*" \
+    --query "sort_by(Images, &CreationDate)[-1].[ImageId,Name]" \
+    --output table
+
+# Launch Trainium instance (use actual AMI ID)
+aws ec2 run-instances \
+    --image-id $NEURON_AMI_ID \
+    --instance-type trn1.2xlarge \
+    --key-name trainium-workshop-key \
+    --security-groups trainium-workshop-sg \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=TrainiumWorkshop}]'
+
+# Get instance details
+aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=TrainiumWorkshop" "Name=instance-state-name,Values=running" \
+    --query "Reservations[*].Instances[*].[InstanceId,PublicIpAddress,State.Name]" \
+    --output table
+
+# Stop instance
+aws ec2 stop-instances \
+    --instance-ids $INSTANCE_ID
+
+# Start instance
+aws ec2 start-instances \
+    --instance-ids $INSTANCE_ID
+
+# Terminate instance
+aws ec2 terminate-instances \
+    --instance-ids $INSTANCE_ID
+```
+
+> **Important**: Always terminate instances you no longer need to avoid unexpected charges. For temporary pauses in work, stopping is more appropriate than terminating, as you'll retain your data and configuration.
