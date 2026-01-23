@@ -391,10 +391,22 @@ Terminate your instance using the following command:
 # Terminate instance
 aws ec2 terminate-instances --instance-ids $INSTANCE_ID
 ```
-
 ---
 
-## 5. Instance Management
+## 5. Ending your instances
+You can use this link to check your running instances: https://us-west-2.console.aws.amazon.com/ec2/home?region=us-west-2#Instances
+
+You can see your running instances like this:
+![Console showing running instances](images/instances.png)
+
+You can use the "Instance state" option to close your instance:
+![How to terminate an instance in the console](images/terminate.png)
+
+When you terminate an instance, it should shutdown then will transition to the "terminated" state.
+
+You can also hibernate an instance. This will keep the state of your machine, but will continue to use AWS storage resources, but not compute resources. Terminating an instance won't use any resources.
+
+## 6. Instance Management
 
 ```bash
 # List available Trainium instance types
