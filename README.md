@@ -260,8 +260,6 @@ aws ec2 authorize-security-group-ingress \
 
 ```bash
 # Launch a Trainium instance
-# DO NOT USE ami-0123456789abcdef - THIS IS JUST A PLACEHOLDER!
-# Use your actual AMI ID from the previous step
 aws ec2 run-instances \
     --image-id ami-0dbbef4fe6755493a \
     --instance-type trn1.2xlarge \
