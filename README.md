@@ -402,7 +402,7 @@ You can see your running instances like this:
 You can use the "Instance state" option to close your instance:
 ![How to terminate an instance in the console](images/terminate.png)
 
-When you terminate an instance, it should shutdown then will transition to the "terminated" state.
+When you terminate an instance, it should shutdown then will transition to the "terminated" state. It will eventually disappear from your instances.
 
 You can also hibernate an instance. This will keep the state of your machine, but will continue to use AWS storage resources, but not compute resources. Terminating an instance won't use any resources.
 
