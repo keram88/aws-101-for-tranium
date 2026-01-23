@@ -388,9 +388,8 @@ instance-id: i-0123456789abcdef
 
 Terminate your instance using the following command:
 ```bash
-# Start instance
-aws ec2 start-instances \
-    --instance-ids $INSTANCE_ID
+# Terminate instance
+aws ec2 terminate-instances --instance-ids $INSTANCE_ID
 ```
 
 ---
