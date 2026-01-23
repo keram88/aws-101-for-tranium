@@ -290,8 +290,166 @@ To check your remaining AWS credit balance (how many credits you have left):
 
 ## 3. Launching a Trainium Instance
 
+### Creating a Security Group
 
-## 4. Instance Management
+Security best practice: We'll create a security group that only allows SSH access from your current IP address:
+
+```bash
+# Create a security group for Trainium instances
+aws ec2 create-security-group \
+    --group-name trainium-workshop-sg \
+    --description "Security group for Trainium workshop" \
+    --output json
+
+# Get your public IP to restrict SSH access (security best practice)
+MY_IP=$(curl -s https://checkip.amazonaws.com)
+echo "Your public IP: $MY_IP (SSH access will be restricted to this IP only)"
+
+# Allow SSH access from your IP only for better security
+aws ec2 authorize-security-group-ingress \
+    --group-name trainium-workshop-sg \
+    --protocol tcp \
+    --port 22 \
+    --cidr $MY_IP/32
+```
+
+> **Security Note**: The above command restricts SSH access to your current public IP address only (`$MY_IP/32`). If your IP address changes (e.g., connecting from a different network), you'll need to update the security group rule by running these commands:
+> 
+> ```bash
+> # Get your new public IP address
+> NEW_IP=$(curl -s https://checkip.amazonaws.com)
+> echo "Your new public IP: $NEW_IP"
+> 
+> # First, get your security group ID
+> SG_ID=$(aws ec2 describe-security-groups \
+>     --group-names trainium-workshop-sg \
+>     --query "SecurityGroups[0].GroupId" \
+>     --output text)
+> 
+> # Then, add a new rule for your current IP
+> aws ec2 authorize-security-group-ingress \
+>     --group-id $SG_ID \
+>     --protocol tcp \
+>     --port 22 \
+>     --cidr $NEW_IP/32
+> ```
+
+### Launching Your Trainium Instance
+
+```bash
+# Launch a Trainium instance
+# DO NOT USE ami-0123456789abcdef - THIS IS JUST A PLACEHOLDER!
+# Use your actual AMI ID from the previous step
+aws ec2 run-instances \
+    --image-id ami-0dbbef4fe6755493a \
+    --instance-type trn1.2xlarge \
+    --count 1 \
+    --key-name trainium-workshop-key \
+    --security-groups trainium-workshop-sg \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=TrainiumWorkshop}]' \
+    --output json
+```
+
+Save the `InstanceId` from the output for later use:
+
+```bash
+# Save the instance ID to a variable
+export INSTANCE_ID=$(aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=TrainiumWorkshop" "Name=instance-state-name,Values=pending,running" \
+    --query "Reservations[0].Instances[0].InstanceId" \
+    --output text)
+
+# Verify that the instance ID was captured correctly
+echo "Instance ID: $INSTANCE_ID"
+```
+
+```bash
+# Get security group ID
+export SECURITY_GROUP_ID=$(aws ec2 describe-security-groups \
+    --group-names trainium-workshop-sg \
+    --query "SecurityGroups[0].GroupId" \
+    --output text)
+
+echo "Security Group ID: $SECURITY_GROUP_ID"
+```
+
+## 4. Connecting to your instance
+## 5. Connecting to Your Instance
+
+### Getting Instance Information
+
+```bash
+# Find your instance's public IP
+aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=TrainiumWorkshop" "Name=instance-state-name,Values=running" \
+    --query "Reservations[*].Instances[*].[InstanceId,PublicIpAddress,State.Name]" \
+    --output table
+
+# Save the public IP address to an environment variable for easier use
+export INSTANCE_IP=$(aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=TrainiumWorkshop" "Name=instance-state-name,Values=running" \
+    --query "Reservations[0].Instances[0].PublicIpAddress" \
+    --output text)
+
+# Verify it was captured correctly
+echo "Instance IP: $INSTANCE_IP"
+
+# You can now use $INSTANCE_IP in other commands, like SSH:
+# ssh -i ~/.ssh/trainium-workshop-key.pem ubuntu@$INSTANCE_IP
+```
+
+### SSH to Your Instance
+
+For macOS/Linux:
+```bash
+# Using the saved IP variable
+ssh -i ~/.ssh/trainium-workshop-key.pem ubuntu@$INSTANCE_IP
+
+# Or directly with the IP address
+ssh -i ~/.ssh/trainium-workshop-key.pem ubuntu@<your-instance-ip>
+```
+
+For Windows using PowerShell with OpenSSH:
+```powershell
+# Using the saved IP variable (if you set it in PowerShell)
+ssh -i C:\path\to\trainium-workshop-key.pem ubuntu@$env:INSTANCE_IP
+
+# Or directly with the IP address
+ssh -i C:\path\to\trainium-workshop-key.pem ubuntu@<your-instance-ip>
+```
+
+For Windows using PuTTY:
+1. Open PuTTY
+2. Enter your instance's IP address in the "Host Name" field
+3. Navigate to Connection > SSH > Auth
+4. Browse to your .ppk key file
+5. Click "Open" to connect
+
+### Copying Files to/from Your Instance (SCP)
+
+To copy a local file to your instance:
+```bash
+# Using the saved IP variable
+scp -i ~/.ssh/trainium-workshop-key.pem /path/to/local/file ubuntu@$INSTANCE_IP:/path/on/remote/machine
+
+# Or directly with the IP address
+scp -i ~/.ssh/trainium-workshop-key.pem /path/to/local/file ubuntu@<your-instance-ip>:/path/on/remote/machine
+```
+
+To copy a file from your instance to your local machine:
+```bash
+# Using the saved IP variable
+scp -i ~/.ssh/trainium-workshop-key.pem ubuntu@$INSTANCE_IP:/path/on/remote/machine /path/to/local/destination
+
+# Or directly with the IP address
+scp -i ~/.ssh/trainium-workshop-key.pem ubuntu@<your-instance-ip>:/path/on/remote/machine /path/to/local/destination
+```
+
+---
+
+
+
+## 6. Instance Management
 
 ```bash
 # List available Trainium instance types
