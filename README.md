@@ -294,7 +294,6 @@ echo "Security Group ID: $SECURITY_GROUP_ID"
 ```
 
 ## 4. Connecting to your instance
-## 5. Connecting to Your Instance
 
 ### Getting Instance Information
 
@@ -365,11 +364,31 @@ scp -i ~/.ssh/trainium-workshop-key.pem ubuntu@$INSTANCE_IP:/path/on/remote/mach
 scp -i ~/.ssh/trainium-workshop-key.pem ubuntu@<your-instance-ip>:/path/on/remote/machine /path/to/local/destination
 ```
 
+Test to see if you have logged into a Trainium enabled machine:
+
+```bash
+# Activate the Neuron environment for PyTorch (use the latest available environment)
+source activate aws_neuron_pytorch_p310
+
+# Verify Neuron installations
+neuron-ls
+```
+
+You should see output similar to:
+```
+instance-type: trn1.2xlarge
+instance-id: i-0123456789abcdef
++--------+--------+--------+---------+
+| NEURON | NEURON | NEURON | PCI     |
+| DEVICE | CORES  | MEMORY | BDF     |
++--------+--------+--------+---------+
+| 0      | 2      | 32 GB  | 00:1e.0 |
++--------+--------+--------+---------+
+```
+
 ---
 
-
-
-## 6. Instance Management
+## 5. Instance Management
 
 ```bash
 # List available Trainium instance types
