@@ -396,27 +396,6 @@ aws ec2 describe-instance-type-offerings \
     --filters Name=instance-type,Values=trn1*,trn2* \
     --output table
 
-# Find latest Neuron DLAMI
-aws ec2 describe-images \
-    --owners amazon \
-    --filters "Name=name,Values=*Neuron*Ubuntu*22.04*" \
-    --query "sort_by(Images, &CreationDate)[-1].[ImageId,Name]" \
-    --output table
-
-# Launch Trainium instance (use actual AMI ID)
-aws ec2 run-instances \
-    --image-id $NEURON_AMI_ID \
-    --instance-type trn1.2xlarge \
-    --key-name trainium-workshop-key \
-    --security-groups trainium-workshop-sg \
-    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=TrainiumWorkshop}]'
-
-# Get instance details
-aws ec2 describe-instances \
-    --filters "Name=tag:Name,Values=TrainiumWorkshop" "Name=instance-state-name,Values=running" \
-    --query "Reservations[*].Instances[*].[InstanceId,PublicIpAddress,State.Name]" \
-    --output table
-
 # Stop instance
 aws ec2 stop-instances \
     --instance-ids $INSTANCE_ID
