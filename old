@@ -66,6 +66,29 @@ aws budgets create-budget \
 ``` -->
 
 
+## Workshop Outline
+
+1. [Setting Up Your AWS Environment](#1-setting-up-your-aws-environment)
+2. [Configuring Budget Alerts](#2-configuring-budget-alerts)
+3. [Installing and Configuring AWS Command Line Interface (CLI)](#3-installing-and-configuring-aws-cli)
+4. [Launching a Trainium Instance](#4-launching-a-trainium-instance)
+5. [Connecting to Your Instance](#5-connecting-to-your-instance)
+6. [Setting Up Remote Development](#6-setting-up-remote-development)
+7. [Hello World on Trainium](#7-hello-world-on-trainium)
+8. [Instance Management](#8-instance-management)
+9. [Cleanup and Best Practices](#9-cleanup-and-best-practices)
+10. [Additional Resources](#10-additional-resources)
+11. [Trainium Management Script](#11-trainium-management-script)
+12. [Common Troubleshooting and Next Steps](#12-common-troubleshooting-and-next-steps)
+
+> **Important**: This workshop uses the **US West (Oregon)** region (`us-west-2`), which supports Trainium instances. If you need to use a different region, first verify that it supports Trainium instances using the commands provided in section 4.
+
+> **Note on Placeholders**: Throughout this guide, you'll see placeholder values like `<your-instance-ip>` or AMI IDs like `ami-0123456789abcdef`. These are just examples and must be replaced with your actual values. **Never use placeholder AMI IDs in actual commands**.
+
+> **Quick Reference Card**: A single-page summary of key commands used in this workshop is available in the [Appendices](#appendices) section.
+
+---
+
 ### Checking EC2 Instance Quotas
 
 Before attempting to launch any instances, check your account's service quotas to ensure you have access to Trainium instances:
