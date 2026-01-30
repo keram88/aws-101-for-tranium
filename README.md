@@ -261,7 +261,7 @@ aws ec2 authorize-security-group-ingress \
 ```bash
 # Launch a Trainium instance
 aws ec2 run-instances \
-    --image-id ami-0dbbef4fe6755493a \
+    --image-id ami-0247d9b336deb7718 \
     --instance-type trn1.2xlarge \
     --count 1 \
     --key-name trainium-workshop-key \
@@ -368,7 +368,7 @@ Test to see if you have logged into a Trainium enabled machine:
 
 ```bash
 # Activate the Neuron environment for PyTorch (use the latest available environment)
-source activate aws_neuron_pytorch_p310
+source /opt/aws_neuronx_venv_pytorch_2_9/bin/activate
 
 # Verify Neuron installations
 neuron-ls
