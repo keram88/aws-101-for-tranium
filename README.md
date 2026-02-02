@@ -404,7 +404,7 @@ Host aws-trainium
   User ubuntu
   IdentityFile ~/.ssh/u<identity-file>.pem
 ```
-Place the [`aws-ssh`][aws-ssh] file in a convenient place and set its
+Place the [aws-ssh](aws-ssh) file in a convenient place and set its
 permissoins by using `chmod u+x /path/to/aws-ssh`.
 
 Then you should be able to log in to your Trainium instance by runninng:
