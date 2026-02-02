@@ -73,7 +73,7 @@ For security best practices, you should use an IAM user instead of your root acc
 7. **IMPORTANT**: Download the .csv file or copy your Access Key ID and Secret Access Key - you won't be able to access the secret again!
 
 ### Creating a Key Pair for SSH
-
+**IMPORTANT**: Before creating the key pair, make sure the "us-west-2" region is selected
 1. Navigate to EC2 in the AWS Console
 2. In the left navigation panel, under "Network & Security", select "Key Pairs"
 3. Click "Create key pair"
