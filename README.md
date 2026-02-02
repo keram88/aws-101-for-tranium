@@ -393,7 +393,30 @@ aws ec2 terminate-instances --instance-ids $INSTANCE_ID
 ```
 ---
 
-## 5. Ending your instances
+## 5. Automating login
+The process to log in to your AWS instance can be automated using an ssh proxy
+command.
+
+Add the follwing to your ssh config file (`~/.ssh/config`):
+```ssh-config
+Host aws-trainium
+  ProxyCommand /path/to/aws-ssh
+  User ubuntu
+  IdentityFile ~/.ssh/u<identity-file>.pem
+```
+Place the [`aws-ssh`][aws-ssh] file in a convenient place and set its
+permissoins by using `chmod u+x /path/to/aws-ssh`.
+
+Then you should be able to log in to your Trainium instance by runninng:
+```bash
+ssh aws-trainium
+```
+
+This script takes care of setting the ingress rule for your current IP address
+and finding the IP address of your instance. What this script does not do is 
+start, stop or terminate your instance. You will need to do that yourself.
+
+## 6. Ending your instances
 You can use this link to check your running instances: https://us-west-2.console.aws.amazon.com/ec2/home?region=us-west-2#Instances
 
 You can see your running instances like this:
@@ -406,7 +429,7 @@ When you terminate an instance, it should shutdown then will transition to the "
 
 You can also hibernate an instance. This will keep the state of your machine, but will continue to use AWS storage resources, but not compute resources. Terminating an instance won't use any resources.
 
-## 6. Instance Management
+## 7. Instance Management
 
 ```bash
 # List available Trainium instance types
