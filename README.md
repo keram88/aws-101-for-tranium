@@ -402,7 +402,7 @@ Add the follwing to your ssh config file (`~/.ssh/config`):
 Host aws-trainium
   ProxyCommand /path/to/aws-ssh
   User ubuntu
-  IdentityFile ~/.ssh/u<identity-file>.pem
+  IdentityFile ~/.ssh/<identity-file>.pem
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
 ```
