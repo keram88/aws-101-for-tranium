@@ -403,6 +403,8 @@ Host aws-trainium
   ProxyCommand /path/to/aws-ssh
   User ubuntu
   IdentityFile ~/.ssh/u<identity-file>.pem
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
 ```
 Place the [aws-ssh](aws-ssh) file in a convenient place and set its
 permissoins by using `chmod u+x /path/to/aws-ssh`.
