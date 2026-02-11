@@ -431,7 +431,59 @@ When you terminate an instance, it should shutdown then will transition to the "
 
 You can also hibernate an instance. This will keep the state of your machine, but will continue to use AWS storage resources, but not compute resources. Terminating an instance won't use any resources.
 
-## 7. Instance Management
+## 7. Profiling
+There are two ways to profile NKI kernels, which will be described below.
+
+Both methods need the following variables to be set to enable the Neuron compiler to keep track of source line information:
+```bash
+export NEURON_FRAMEWORK_DEBUG=1
+export XLA_IR_DEBUG=1
+export XLA_HLO_DEBUG=1
+```
+
+### Profiling with the `nki.profile` decorator
+There is a decorator (`nki.profile`) that can be used for prifling.
+This is the most targeted way to profile a NKI kernel, however, this appears to be working in the `neuronxcc` python package.
+For example, this program uses the `neuronxcc.nki.profile` docorator to :
+```python
+import neuronxcc.nki as nki
+
+@nki.profile(working_directory="/home/ubuntu/profiles", save_neff_name='file.neff', save_trace_name='profile.ntff')
+def numpy_attention(q, k, v):
+    ...
+```
+This will save profiles for this kernel in the `/home/ubuntu/profiles` directory.
+
+### Full program profiling
+It is possible to profile an entire program without any code modification using the above decorator.
+This is necessary if the kernel you are profiling is written in the `nki` package and not the `neuronxcc` package, as the `profile` decorator in the `nki` package appears to not be implemented yet.
+Full program profiling can be enabled by setting the following variables:
+```bash
+export `NEURON_RT_INSPECT_OUTPUT_DIR=./output
+export NEURON_RT_INSPECT_ENABLE=1
+export NEURON_RT_INSPECT_DEVICE_PROFILE=1
+```
+This will make your `.neff` and `.ntff` appear in the `./output` directory.
+This has the disadvantage that it will cause all kernels that are in your program to be profiled, which will lead to multiple `.neff` and `.ntff` files being created.
+You can match up corresponding `.neff` and `.ntff` files by matching the number in their name.
+For example, the following files are part of the same profile since `13637703296130` is part of their name:
+```
+13637703296130_instid_0_vnc_0.ntff
+neff_13637703296130.neff
+```
+You can figure out which kernel they correspond to in Neuron Explorer by matching source lines.
+
+Alternatively, you can comment out other kernels so you can profile just one at a time.
+For example:
+```python
+...
+# matmul_k1(t1, t2)
+matmul_k2(t1, t2)
+# matmul_k3(t1, t2)
+```
+this will produce a profile for the `matmul_k2` kernel only.
+
+## 8. Instance Management
 
 ```bash
 # List available Trainium instance types
