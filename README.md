@@ -457,12 +457,15 @@ This will save profiles for this kernel in the `/home/ubuntu/profiles` directory
 ### Full program profiling
 It is possible to profile an entire program without any code modification using the above decorator.
 This is necessary if the kernel you are profiling is written in the `nki` package and not the `neuronxcc` package, as the `profile` decorator in the `nki` package appears to not be implemented yet.
+
 Full program profiling can be enabled by setting the following variables:
 ```bash
-export `NEURON_RT_INSPECT_OUTPUT_DIR=./output
+export NEURON_RT_INSPECT_OUTPUT_DIR=./output
 export NEURON_RT_INSPECT_ENABLE=1
 export NEURON_RT_INSPECT_DEVICE_PROFILE=1
 ```
+Note: having these variables set appears to interfere with the the decorator based method described in the previous section. If you have these variables set, e.g., `echo $NEURON_RT_INSPECT_ENABLE` prints `1`, then run `unset NEURON_RT_INSPECT_ENABLE` and `unset NEURON_RT_INSPECT_DEVICE_PROFILE`.
+
 This will make your `.neff` and `.ntff` appear in the `./output` directory.
 This has the disadvantage that it will cause all kernels that are in your program to be profiled, which will lead to multiple `.neff` and `.ntff` files being created.
 You can match up corresponding `.neff` and `.ntff` files by matching the number in their name.
