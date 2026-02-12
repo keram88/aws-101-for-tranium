@@ -475,6 +475,7 @@ For example, the following files are part of the same profile since `13637703296
 neff_13637703296130.neff
 ```
 You can figure out which kernel they correspond to in Neuron Explorer by matching source lines.
+For more information about viewing source code, please see this: [Source Code Viewer](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/tools/neuron-explorer/how-to-link-view-source-code.html)
 
 Alternatively, you can comment out other kernels so you can profile just one at a time.
 For example:
