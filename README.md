@@ -436,6 +436,7 @@ There are two ways to profile NKI kernels, which will be described below.
 
 Both methods need the following variables to be set to enable the Neuron compiler to keep track of source line information:
 ```bash
+export NEURON_PLATFORM_TARGET_OVERRIDE=trn1
 export NEURON_FRAMEWORK_DEBUG=1
 export XLA_IR_DEBUG=1
 export XLA_HLO_DEBUG=1
