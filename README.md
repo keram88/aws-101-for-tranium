@@ -261,7 +261,7 @@ aws ec2 authorize-security-group-ingress \
 ```bash
 # Launch a Trainium instance
 aws ec2 run-instances \
-    --image-id ami-0247d9b336deb7718 \
+    --image-id ami-06906839c7114cbff \
     --instance-type trn1.2xlarge \
     --count 1 \
     --key-name trainium-workshop-key \
